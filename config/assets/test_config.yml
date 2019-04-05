@@ -1,0 +1,24 @@
+---
+service:
+  service_name: my-service
+  service_id: 12345abcde
+  plans:
+  - plan_id: someid
+    plan_name: somename
+    description: this is a description
+    kube_storage_class: persistent
+    free: true    
+  - plan_id: someotherid
+    plan_name: someothername
+    description: this is another description
+    kube_storage_class: gold
+    free: false
+
+auth:
+  username: admin
+  password: secret
+
+backend_host: localhost
+backend_port: 3000
+
+namespace: eirini
