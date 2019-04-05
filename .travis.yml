@@ -10,4 +10,5 @@ env:
 - GO111MODULE=on
 
 script:
-- $GOPATH/bin/goveralls -service=travis-ci
+#- $GOPATH/bin/goveralls -service=travis-ci
+- go test ./... -cover
