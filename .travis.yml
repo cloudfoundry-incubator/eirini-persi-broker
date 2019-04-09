@@ -11,4 +11,5 @@ env:
 
 script:
 #- $GOPATH/bin/goveralls -service=travis-ci
-- go test ./... -cover
+- go test ./... -cover -coverprofile=./coverage.out
+- godacov -t $CODACY_TOKEN -r ./coverage.out -c $TRAVIS_COMMIT
