@@ -1,4 +1,4 @@
-module github.com/suse/eirini-persi-broker
+module github.com/SUSE/eirini-persi-broker
 
 go 1.12
 
