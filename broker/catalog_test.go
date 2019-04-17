@@ -3,9 +3,9 @@ package broker_test
 import (
 	"fmt"
 
+	"github.com/SUSE/eirini-persi-broker/config"
+	brokerconfig "github.com/SUSE/eirini-persi-broker/config"
 	"github.com/pivotal-cf/brokerapi"
-	"github.com/suse/eirini-persi-broker/config"
-	brokerconfig "github.com/suse/eirini-persi-broker/config"
 )
 
 var (

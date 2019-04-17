@@ -12,8 +12,8 @@ import (
 	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc" // from https://github.com/kubernetes/client-go/issues/345
 
-	"github.com/suse/eirini-persi-broker/broker"
-	"github.com/suse/eirini-persi-broker/config"
+	"github.com/SUSE/eirini-persi-broker/broker"
+	"github.com/SUSE/eirini-persi-broker/config"
 )
 
 func main() {
