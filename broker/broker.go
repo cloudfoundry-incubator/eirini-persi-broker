@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
@@ -26,6 +27,12 @@ type KubeVolumeBroker struct {
 // user can pass when doing cf bind ...
 type userMountConfiguration struct {
 	Directory string `json:"dir"`
+}
+
+// userSizeConfiguration represents the configuration the
+// user can pass when doing cf create-service ...
+type userSizeConfiguration struct {
+	Size string `json:"size"`
 }
 
 // Services returns a list with one item, the service for provisioning kubernetes volumes
@@ -101,6 +108,26 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 		return spec, brokerapi.ErrInstanceAlreadyExists
 	}
 
+	// Figure out how much storage to provision
+	var userSize userSizeConfiguration
+	if len(serviceDetails.RawParameters) > 0 {
+		err = json.Unmarshal(serviceDetails.RawParameters, &userSize)
+		if err != nil {
+			return spec, errors.Wrap(err, "error unmarshaling json user configuration")
+		}
+	}
+	size := userSize.Size
+	if size == "" {
+		size = plan.DefaultSize
+	}
+	if size == "" {
+		return spec, errors.New("plan doesn't have a default size")
+	}
+	quantity, err := resource.ParseQuantity(size)
+	if err != nil {
+		return spec, errors.Wrap(err, "invalid quantity string")
+	}
+
 	_, err = b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Create(&corev1.PersistentVolumeClaim{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: instanceID,
@@ -115,6 +142,11 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 			StorageClassName: &plan.StorageClass,
 			AccessModes: []corev1.PersistentVolumeAccessMode{
 				"ReadWriteOnce",
+			},
+			Resources: corev1.ResourceRequirements{
+				Requests: corev1.ResourceList{
+					"storage": quantity,
+				},
 			},
 		},
 	})
@@ -174,9 +206,11 @@ func (b *KubeVolumeBroker) Bind(ctx context.Context, instanceID, bindingID strin
 
 	// Resolve the mount directory
 	var userMount userMountConfiguration
-	err = json.Unmarshal(details.RawParameters, &userMount)
-	if err != nil {
-		return spec, errors.Wrap(err, "error unmarshalling json user configuration")
+	if len(details.RawParameters) > 0 {
+		err = json.Unmarshal(details.RawParameters, &userMount)
+		if err != nil {
+			return spec, errors.Wrap(err, "error unmarshaling json user configuration")
+		}
 	}
 	containerDir := userMount.Directory
 	if containerDir == "" {

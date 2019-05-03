@@ -41,6 +41,7 @@ func DefaultPlanConfiguration() config.Plan {
 		Name:         DefaultPlanName,
 		StorageClass: DefaultStorageClass,
 		Free:         true,
+		DefaultSize:  "1Gi",
 	}
 }
 
