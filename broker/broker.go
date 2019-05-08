@@ -231,8 +231,11 @@ func (b *KubeVolumeBroker) Bind(ctx context.Context, instanceID, bindingID strin
 	if pvc.Spec.StorageClassName == nil {
 		return spec, errors.New("pvc has a nil storage class")
 	}
-	storageClassName := *pvc.Spec.StorageClassName
 
+	storageClassName := *pvc.Spec.StorageClassName
+	spec.Credentials =  map[string]interface{}{
+		"volume_id": pvc.Name,
+}
 	spec.VolumeMounts = []brokerapi.VolumeMount{
 		{
 			Driver:       storageClassName,
@@ -240,11 +243,10 @@ func (b *KubeVolumeBroker) Bind(ctx context.Context, instanceID, bindingID strin
 			Mode:         "rw",
 			DeviceType:   "shared",
 			Device: brokerapi.SharedDevice{
-				VolumeId: pvc.Name,
+				VolumeId:    pvc.Name,
 			},
 		},
 	}
-
 	return spec, nil
 }
 
