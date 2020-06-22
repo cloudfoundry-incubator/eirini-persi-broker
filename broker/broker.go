@@ -139,7 +139,7 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 			},
 		},
 		Spec: corev1.PersistentVolumeClaimSpec{
-			StorageClassName: &plan.StorageClass,
+			StorageClassName: plan.StorageClass,
 			AccessModes: []corev1.PersistentVolumeAccessMode{
 				"ReadWriteOnce",
 			},

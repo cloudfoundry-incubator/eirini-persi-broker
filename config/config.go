@@ -42,7 +42,7 @@ type Plan struct {
 	ID           string `yaml:"plan_id"`
 	Name         string `yaml:"plan_name"`
 	Description  string `yaml:"description"`
-	StorageClass string `yaml:"kube_storage_class"`
+	StorageClass *string `yaml:"kube_storage_class"`
 	Free         bool   `yaml:"free"`
 	DefaultSize  string `yaml:"default_size"`
 }
