@@ -139,7 +139,7 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 			},
 		},
 		Spec: corev1.PersistentVolumeClaimSpec{
-			StorageClassName: &plan.StorageClass,
+			StorageClassName: plan.StorageClass,
 			AccessModes: []corev1.PersistentVolumeAccessMode{
 				"ReadWriteOnce",
 			},
@@ -233,9 +233,9 @@ func (b *KubeVolumeBroker) Bind(ctx context.Context, instanceID, bindingID strin
 	}
 
 	storageClassName := *pvc.Spec.StorageClassName
-	spec.Credentials =  map[string]interface{}{
+	spec.Credentials = map[string]interface{}{
 		"volume_id": pvc.Name,
-}
+	}
 	spec.VolumeMounts = []brokerapi.VolumeMount{
 		{
 			Driver:       storageClassName,
@@ -243,7 +243,7 @@ func (b *KubeVolumeBroker) Bind(ctx context.Context, instanceID, bindingID strin
 			Mode:         "rw",
 			DeviceType:   "shared",
 			Device: brokerapi.SharedDevice{
-				VolumeId:    pvc.Name,
+				VolumeId: pvc.Name,
 			},
 		},
 	}

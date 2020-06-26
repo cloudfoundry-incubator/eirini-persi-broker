@@ -71,19 +71,21 @@ var _ = Describe("parsing the broker config file", func() {
 			})
 
 			It("loads plans", func() {
+				persistent := "persistent"
+				gold := "gold"
 				Ω(config.ServiceConfiguration.Plans).To(BeEquivalentTo(
 					[]brokerconfig.Plan{
 						{
 							Name:         "somename",
 							ID:           "someid",
-							StorageClass: "persistent",
+							StorageClass: &persistent,
 							Free:         true,
 							Description:  "this is a description",
 						},
 						{
 							Name:         "someothername",
 							ID:           "someotherid",
-							StorageClass: "gold",
+							StorageClass: &gold,
 							Free:         false,
 							Description:  "this is another description",
 						},
