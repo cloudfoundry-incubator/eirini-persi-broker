@@ -1,12 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	"context"
 
 	"code.cloudfoundry.org/lager"
 	"github.com/pivotal-cf/brokerapi"
@@ -58,7 +58,7 @@ func main() {
 	serviceBroker := &broker.KubeVolumeBroker{
 		KubeClient: clientset,
 		Config:     config,
-		Context: context.Background(),
+		Context:    context.Background(),
 	}
 
 	brokerCredentials := brokerapi.BrokerCredentials{

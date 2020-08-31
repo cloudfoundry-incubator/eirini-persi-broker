@@ -21,7 +21,7 @@ import (
 type KubeVolumeBroker struct {
 	KubeClient kubernetes.Interface
 	Config     config.Config
-	Context context.Context
+	Context    context.Context
 }
 
 // userMountConfiguration represents the configuration the
@@ -33,7 +33,7 @@ type userMountConfiguration struct {
 // userConfiguration represents the configuration the
 // user can pass when doing cf create-service ...
 type userConfiguration struct {
-	Size string `json:"size"`
+	Size       string `json:"size"`
 	AccessMode string `json:"access_mode"`
 }
 
@@ -160,7 +160,7 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 				},
 			},
 		},
-	},metav1.CreateOptions{})
+	}, metav1.CreateOptions{})
 
 	if err != nil {
 		return spec, errors.Wrap(err, "error provisioning")
@@ -188,7 +188,7 @@ func (b *KubeVolumeBroker) Deprovision(ctx context.Context, instanceID string, d
 	}
 
 	// Delete the PVC
-	err = b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Delete(b.Context,instanceID, metav1.DeleteOptions{})
+	err = b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Delete(b.Context, instanceID, metav1.DeleteOptions{})
 	if err != nil {
 		return spec, errors.Wrap(err, "error deleting persistent volume claim for deprovisioning")
 	}
@@ -233,7 +233,7 @@ func (b *KubeVolumeBroker) Bind(ctx context.Context, instanceID, bindingID strin
 		pvc.Annotations = map[string]string{}
 	}
 	pvc.Annotations[bindingIDAnnotation(bindingID)] = containerDir
-	_, err = b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Update(b.Context,pvc,metav1.UpdateOptions{})
+	_, err = b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Update(b.Context, pvc, metav1.UpdateOptions{})
 	if err != nil {
 		return spec, errors.Wrap(err, "error updating persistent volume claim annotations for binding")
 	}
@@ -286,7 +286,7 @@ func (b *KubeVolumeBroker) Unbind(ctx context.Context, instanceID, bindingID str
 
 	// Remove the annotation
 	delete(pvc.Annotations, bindingIDAnnotation(bindingID))
-	_, err = b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Update(b.Context,pvc,metav1.UpdateOptions{})
+	_, err = b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Update(b.Context, pvc, metav1.UpdateOptions{})
 	if err != nil {
 		return spec, errors.Wrap(err, "error updating persistent volume claim annotations for unbinding")
 	}
@@ -382,7 +382,7 @@ func (b *KubeVolumeBroker) Update(ctx context.Context, instanceID string, detail
 }
 
 func (b *KubeVolumeBroker) instanceExists(instanceID string) (bool, *corev1.PersistentVolumeClaim, error) {
-	pvc, err := b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Get(b.Context,instanceID, metav1.GetOptions{})
+	pvc, err := b.KubeClient.CoreV1().PersistentVolumeClaims(b.Config.Namespace).Get(b.Context, instanceID, metav1.GetOptions{})
 
 	if apierrors.IsNotFound(err) {
 		return false, nil, nil

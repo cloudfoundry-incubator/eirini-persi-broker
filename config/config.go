@@ -39,13 +39,13 @@ type ServiceConfiguration struct {
 
 // Plan represents a Broker plan for a Kubernetes storage class
 type Plan struct {
-	ID           string  `yaml:"plan_id"`
-	Name         string  `yaml:"plan_name"`
-	Description  string  `yaml:"description"`
-	StorageClass *string `yaml:"kube_storage_class"`
-	Free         bool    `yaml:"free"`
-	DefaultSize  string  `yaml:"default_size"`
-	DefaultAccessMode  string  `yaml:"default_access_mode"`
+	ID                string  `yaml:"plan_id"`
+	Name              string  `yaml:"plan_name"`
+	Description       string  `yaml:"description"`
+	StorageClass      *string `yaml:"kube_storage_class"`
+	Free              bool    `yaml:"free"`
+	DefaultSize       string  `yaml:"default_size"`
+	DefaultAccessMode string  `yaml:"default_access_mode"`
 }
 
 // ParseConfig parses a config file
