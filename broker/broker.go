@@ -131,7 +131,7 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 		accessMode = plan.DefaultAccessMode
 	}
 	if accessMode == "" {
-		accessMode = "ReadWriteMany"
+		accessMode = string(corev1.ReadWriteMany)
 	}
 
 	quantity, err := resource.ParseQuantity(size)
@@ -152,7 +152,7 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 		Spec: corev1.PersistentVolumeClaimSpec{
 			StorageClassName: plan.StorageClass,
 			AccessModes: []corev1.PersistentVolumeAccessMode{
-				accessMode,
+				corev1.PersistentVolumeAccessMode(accessMode),
 			},
 			Resources: corev1.ResourceRequirements{
 				Requests: corev1.ResourceList{
