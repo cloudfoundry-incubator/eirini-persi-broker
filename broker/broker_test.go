@@ -78,7 +78,7 @@ var _ = Describe("broker", func() {
 				)
 				Expect(err).NotTo(HaveOccurred())
 
-				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(metav1.ListOptions{})
+				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(context.TODO(), metav1.ListOptions{})
 				Expect(err).NotTo(HaveOccurred())
 
 				Expect(len(pvcList.Items)).To(Equal(1))
@@ -171,7 +171,7 @@ var _ = Describe("broker", func() {
 				)
 				Expect(err).NotTo(HaveOccurred())
 
-				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(metav1.ListOptions{})
+				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(context.TODO(), metav1.ListOptions{})
 				Expect(err).NotTo(HaveOccurred())
 				Expect(len(pvcList.Items)).To(Equal(0))
 			})
@@ -187,7 +187,7 @@ var _ = Describe("broker", func() {
 					Expect(err).To(HaveOccurred())
 					Expect(err.Error()).To(ContainSubstring("instance does not exist"))
 
-					pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(metav1.ListOptions{})
+					pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(context.TODO(), metav1.ListOptions{})
 					Expect(err).NotTo(HaveOccurred())
 					Expect(len(pvcList.Items)).To(Equal(1))
 				})
@@ -225,7 +225,7 @@ var _ = Describe("broker", func() {
 			})
 
 			It("adds an annotation to the pvc", func() {
-				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(metav1.ListOptions{})
+				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(context.TODO(), metav1.ListOptions{})
 				Expect(err).NotTo(HaveOccurred())
 				Expect(len(pvcList.Items)).To(Equal(1))
 
@@ -269,7 +269,7 @@ var _ = Describe("broker", func() {
 				)
 				Expect(err).NotTo(HaveOccurred())
 
-				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(metav1.ListOptions{})
+				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(context.TODO(), metav1.ListOptions{})
 				Expect(err).NotTo(HaveOccurred())
 				Expect(len(pvcList.Items)).To(Equal(1))
 
@@ -289,7 +289,7 @@ var _ = Describe("broker", func() {
 					Expect(err).To(HaveOccurred())
 					Expect(err.Error()).To(ContainSubstring("binding does not exist"))
 
-					pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(metav1.ListOptions{})
+					pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(context.TODO(), metav1.ListOptions{})
 					Expect(err).NotTo(HaveOccurred())
 					Expect(len(pvcList.Items)).To(Equal(1))
 
