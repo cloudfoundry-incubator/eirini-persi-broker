@@ -9,7 +9,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/SUSE/eirini-persi-broker/log"
+	"code.cloudfoundry.org/eirini-persi-broker/log"
 )
 
 var _ = Describe("CliSink", func() {

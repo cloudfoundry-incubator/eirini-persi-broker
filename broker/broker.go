@@ -14,7 +14,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/SUSE/eirini-persi-broker/config"
+	"code.cloudfoundry.org/eirini-persi-broker/config"
 )
 
 // KubeVolumeBroker is a broker for Kubernetes Volumes

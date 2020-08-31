@@ -1,4 +1,4 @@
-module github.com/SUSE/eirini-persi-broker
+module code.cloudfoundry.org/eirini-persi-broker
 
 go 1.12
 

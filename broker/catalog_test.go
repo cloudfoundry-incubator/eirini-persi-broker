@@ -3,8 +3,8 @@ package broker_test
 import (
 	"fmt"
 
-	"github.com/SUSE/eirini-persi-broker/config"
-	brokerconfig "github.com/SUSE/eirini-persi-broker/config"
+	"code.cloudfoundry.org/eirini-persi-broker/config"
+	brokerconfig "code.cloudfoundry.org/eirini-persi-broker/config"
 	"github.com/pivotal-cf/brokerapi"
 )
 

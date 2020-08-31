@@ -10,8 +10,8 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/fake"
 
-	"github.com/SUSE/eirini-persi-broker/broker"
-	brokerconfig "github.com/SUSE/eirini-persi-broker/config"
+	"code.cloudfoundry.org/eirini-persi-broker/broker"
+	brokerconfig "code.cloudfoundry.org/eirini-persi-broker/config"
 )
 
 var _ = Describe("broker", func() {
