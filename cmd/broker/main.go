@@ -57,6 +57,7 @@ func main() {
 	serviceBroker := &broker.KubeVolumeBroker{
 		KubeClient: clientset,
 		Config:     config,
+		Context: context.Background(),
 	}
 
 	brokerCredentials := brokerapi.BrokerCredentials{
