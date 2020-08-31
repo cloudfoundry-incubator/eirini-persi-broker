@@ -45,6 +45,7 @@ type Plan struct {
 	StorageClass *string `yaml:"kube_storage_class"`
 	Free         bool    `yaml:"free"`
 	DefaultSize  string  `yaml:"default_size"`
+	DefaultAccessMode  string  `yaml:"default_access_mode"`
 }
 
 // ParseConfig parses a config file

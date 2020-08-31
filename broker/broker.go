@@ -29,10 +29,11 @@ type userMountConfiguration struct {
 	Directory string `json:"dir"`
 }
 
-// userSizeConfiguration represents the configuration the
+// userConfiguration represents the configuration the
 // user can pass when doing cf create-service ...
-type userSizeConfiguration struct {
+type userConfiguration struct {
 	Size string `json:"size"`
+	AccessMode string `json:"access_mode"`
 }
 
 // Services returns a list with one item, the service for provisioning kubernetes volumes
@@ -109,20 +110,29 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 	}
 
 	// Figure out how much storage to provision
-	var userSize userSizeConfiguration
+	var userConfig userConfiguration
 	if len(serviceDetails.RawParameters) > 0 {
-		err = json.Unmarshal(serviceDetails.RawParameters, &userSize)
+		err = json.Unmarshal(serviceDetails.RawParameters, &userConfig)
 		if err != nil {
 			return spec, errors.Wrap(err, "error unmarshaling json user configuration")
 		}
 	}
-	size := userSize.Size
+	size := userConfig.Size
 	if size == "" {
 		size = plan.DefaultSize
 	}
 	if size == "" {
 		return spec, errors.New("plan doesn't have a default size")
 	}
+
+	accessMode := userConfig.AccessMode
+	if accessMode == "" {
+		accessMode = plan.DefaultAccessMode
+	}
+	if accessMode == "" {
+		accessMode = "ReadWriteMany"
+	}
+
 	quantity, err := resource.ParseQuantity(size)
 	if err != nil {
 		return spec, errors.Wrap(err, "invalid quantity string")
@@ -141,7 +151,7 @@ func (b *KubeVolumeBroker) Provision(ctx context.Context, instanceID string, ser
 		Spec: corev1.PersistentVolumeClaimSpec{
 			StorageClassName: plan.StorageClass,
 			AccessModes: []corev1.PersistentVolumeAccessMode{
-				"ReadWriteOnce",
+				accessMode,
 			},
 			Resources: corev1.ResourceRequirements{
 				Requests: corev1.ResourceList{
