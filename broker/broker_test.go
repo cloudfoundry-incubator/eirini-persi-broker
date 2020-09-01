@@ -2,10 +2,13 @@ package broker_test
 
 import (
 	"context"
+	"encoding/json"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/pivotal-cf/brokerapi"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/fake"
@@ -84,7 +87,47 @@ var _ = Describe("broker", func() {
 				Expect(len(pvcList.Items)).To(Equal(1))
 				Expect(pvcList.Items[0].Name).To(Equal(DefaultInstanceID))
 				Expect(*pvcList.Items[0].Spec.StorageClassName).To(Equal(DefaultStorageClass))
+				Expect(pvcList.Items[0].Spec.AccessModes[0]).To(Equal(corev1.ReadWriteMany))
+			})
 
+			It("creates a pvc with custom settings", func() {
+
+				customData := struct {
+					Size       string `json:"size"`
+					AccessMode string `json:"access_mode"`
+				}{Size: "20Gi", AccessMode: string(corev1.ReadWriteOnce)}
+
+				b, err := json.MarshalIndent(&customData, "", "\t")
+				Expect(err).NotTo(HaveOccurred())
+
+				h := json.RawMessage(b)
+				opts := brokerapi.ProvisionDetails{
+					OrganizationGUID: DefaultOrgID,
+					PlanID:           DefaultPlanID,
+					ServiceID:        DefaultServiceID,
+					SpaceGUID:        DefaultSpaceID,
+					RawParameters:    h,
+				}
+				spec, err := testBroker.Provision(
+					context.Background(),
+					DefaultInstanceID,
+					opts,
+					true,
+				)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(spec.IsAsync).To(Equal(false))
+
+				pvcList, err := kubeClient.CoreV1().PersistentVolumeClaims(DefaultNamespace).List(context.TODO(), metav1.ListOptions{})
+				Expect(err).NotTo(HaveOccurred())
+
+				q, err := resource.ParseQuantity("20Gi")
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(len(pvcList.Items)).To(Equal(1))
+				Expect(pvcList.Items[0].Name).To(Equal(DefaultInstanceID))
+				Expect(*pvcList.Items[0].Spec.StorageClassName).To(Equal(DefaultStorageClass))
+				Expect(pvcList.Items[0].Spec.AccessModes[0]).To(Equal(corev1.ReadWriteOnce))
+				Expect(pvcList.Items[0].Spec.Resources.Requests["storage"].Equal(q)).To(BeTrue())
 			})
 
 			It("it's returned using GetInstance", func() {
