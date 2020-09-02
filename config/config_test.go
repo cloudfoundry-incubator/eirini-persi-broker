@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	brokerconfig "github.com/SUSE/eirini-persi-broker/config"
+	brokerconfig "code.cloudfoundry.org/eirini-persi-broker/config"
 )
 
 var _ = Describe("parsing the broker config file", func() {
